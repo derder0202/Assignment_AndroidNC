@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Assignment_AndroidNC</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="facebook_app_id">3074583976129195</string>
+</resources>
