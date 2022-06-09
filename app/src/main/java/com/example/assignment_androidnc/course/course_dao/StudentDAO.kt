@@ -24,6 +24,28 @@ class StudentDAO(var context: Context) {
         val result2 = db.insert("SV_Lop",null,value2)<0
         val result = if(result1&&result2) "them that bai" else "them thanh cong"
         Toast.makeText(context,result,Toast.LENGTH_SHORT).show()
+        db.close()
+    }
+
+    fun remove(student: Student){
+        db = sqLiteHelper.writableDatabase
+        val result = if(db.delete("SinhVien","maSV = '${student.maSV}' ",null)<=0) "xoa that bai" else "xoa thanh cong"
+        db.delete("SV_Lop","maSV = '${student.maSV}' ",null)
+        Toast.makeText(context,result,Toast.LENGTH_SHORT).show()
+        db.close()
+    }
+    fun update(student: Student){
+        db = sqLiteHelper.writableDatabase
+        val values = ContentValues()
+        val value2 = ContentValues()
+        values.put("tenSV",student.tenSV)
+        value2.put("maSV",student.maSV)
+        value2.put("maLop",student.lop)
+        val result1 = db.update("SinhVien",values,"maSV='${student.maSV}' ",null)<0
+        val result2 = db.update("SV_Lop",value2,"maSV='${student.maSV}' ",null)<0
+        val result = if(result1&&result2) "cap nhat that bai" else "cap nhat thanh cong"
+        Toast.makeText(context,result,Toast.LENGTH_SHORT).show()
+        db.close()
     }
 
     fun getData(sql:String):ArrayList<Student>{

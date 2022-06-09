@@ -27,19 +27,19 @@ class StudentActivity : AppCompatActivity() {
 
         recyclerView = binding.stuRecylerView
         binding.stuFab.setOnClickListener {
-            openDialog()
+            openDialog(Student(),0)
         }
         updateRecyclerView()
     }
     fun updateRecyclerView(){
         val list = StudentDAO(this).getAll()
-        adapterStudent = AdapterStudent(this,list)
+        adapterStudent = AdapterStudent(this,list,this)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapterStudent
     }
-    fun openDialog(){
+    fun openDialog(student: Student,type:Int){
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Thêm Sinh viên")
+        builder.setTitle(if(type==0)"Thêm Sinh viên" else "cap nhat sinh vien")
         val binding = DialogStudentBinding.inflate(layoutInflater)
         builder.setView(binding.root)
         val dialog = builder.create()
@@ -48,6 +48,13 @@ class StudentActivity : AppCompatActivity() {
         val spinner = binding.spinner
         val maSV = binding.maSV
         val tenSV = binding.tenSV
+
+        if(type==1){
+            maSV.editText!!.setText(student.maSV)
+            tenSV.editText!!.setText(student.tenSV)
+            spinner.setSelection(LopDAO(this).getAll().indexOfFirst { lop -> lop.maLop == student.lop })
+            maSV.editText!!.isEnabled = false
+        }
 
         val listLop = LopDAO(this).getAll()
         val listLopToString = ArrayList<String>()
@@ -60,7 +67,11 @@ class StudentActivity : AppCompatActivity() {
         binding.dialogStudentAddBtn.setOnClickListener {
             if(listLop.isNotEmpty()&&LopActivity().checkField(maSV,tenSV)){
                 val student = Student(maSV.editText!!.text.toString(),tenSV.editText!!.text.toString(),listLop[spinner.selectedItemPosition].maLop)
-                StudentDAO(this).insert(student)
+                if(type==0){
+                    StudentDAO(this).insert(student)
+                } else{
+                    StudentDAO(this).update(student)
+                }
                 updateRecyclerView()
                 dialog.dismiss()
             }

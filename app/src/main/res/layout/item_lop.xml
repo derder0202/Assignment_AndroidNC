@@ -47,6 +47,22 @@
             android:textAlignment="textStart"
             android:textStyle="bold" />
 
+        <ImageView
+            android:id="@+id/item_lop_editBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"
+            app:srcCompat="@drawable/ic_edit" />
+
+        <ImageView
+            android:id="@+id/item_lop_removeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"
+            app:srcCompat="@drawable/ic_delete" />
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

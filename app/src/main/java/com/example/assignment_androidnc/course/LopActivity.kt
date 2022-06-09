@@ -25,19 +25,19 @@ class LopActivity : AppCompatActivity() {
         recyclerView = binding.lopRecylerView
 
         binding.lopFab.setOnClickListener {
-            openDialog()
+            openDialog(Lop(),0)
         }
         updateRecyclerView()
 
     }
     fun updateRecyclerView(){
-        val list = LopDAO(this@LopActivity).getAll()
-        adapterLop = AdapterLop(this@LopActivity,list)
-        recyclerView.layoutManager = LinearLayoutManager(this@LopActivity)
+        val list = LopDAO(this).getAll()
+        adapterLop = AdapterLop(this,list,this)
+        recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapterLop
     }
 
-    fun openDialog(){
+    fun openDialog(lop: Lop,type:Int){
         val builder = AlertDialog.Builder(this@LopActivity)
         builder.setTitle("Thêm lớp")
         val binding = DialogLopBinding.inflate(layoutInflater)
@@ -50,13 +50,24 @@ class LopActivity : AppCompatActivity() {
         val maLopEdt = maLop.editText!!
         val tenLopEdt = tenLop.editText!!
 
+        if(type == 1){
+            maLopEdt.setText(lop.maLop)
+            tenLopEdt.setText(lop.tenLop)
+            maLopEdt.isEnabled = false
+        }
+
         binding.dialogLopCloseBtn.setOnClickListener {
             dialog.dismiss()
         }
         binding.dialogLopThemBtn.setOnClickListener {
             if(checkField(maLop,tenLop)){
-                LopDAO(this).insert(Lop(maLopEdt.text.toString(),tenLopEdt.text.toString()))
+                if(type==0){
+                    LopDAO(this).insert(Lop(maLopEdt.text.toString(),tenLopEdt.text.toString()))
+                } else{
+                    LopDAO(this).update(Lop(maLopEdt.text.toString(),tenLopEdt.text.toString()))
+                }
                 updateRecyclerView()
+                dialog.dismiss()
             }
         }
 
